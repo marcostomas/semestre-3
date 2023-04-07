@@ -1,0 +1,73 @@
+Arquitetura de Computador
+Arquitetura de conjunto de instrução (ISA - Instruction Set Architecture)
+Códigos de operação da instrução (opcodes)
+Organização de Computador
+
+
+Siewiorek, Bell e Newell (1982): Notadamente, há poucas modelagens de estrutura de computador para
+servir a função a ser desempenhada. Na raiz disso reside a natureza do propósito geral dos 
+computadores, na qual toda a especialização funcional ocorre no momento de programar, e não no 
+momento de projetar
+
+Estrutura função
+Unidade central de processamento (CPU)/Processador
+Memória principal
+E/S
+Sistema de interconexão
+Unidade de Controle
+Unidade lógica a aritmética (ALU - Arithmetic and Logic Unit)
+Registradores
+Interconexão da CPU
+Unidade central de processamento (CPU)
+Core
+Processador
+Lógica de instrução
+Lógica de load/store
+palavra
+Registradores
+Implementação da Unidade de Controle da CPU Microprogramada
+Placa de circuito impresso (PCB - Printed Circuit Board)
+
+==================================================================================================
+ARM 
+Armazenamento em Nuvem
+Arquitetura de Computador - verificado
+Arquitetura de conjunto de instrução (ISA) - verificado
+Barramento de sistema
+Célula de Memória
+Chip - verificado
+Circuito integrado - verificado
+Computação em nuvem
+Core - verificado
+E/S - verificado
+Fabricante de equipamento origianal (OEM)
+Infraestrutura como um serviço (IaaS)
+Intel x86
+Internet das coisas (IoT)
+Memória principal
+Memória semicondutora
+Microeletrônica
+Microprocessador - verificado
+Multicore - verificado
+Organização de computador - verificado
+Placa de circuito impresso - verificado
+Placa-mãe - verificado
+Plataforma como um serviço (PaaS)
+Porta
+Processador - verificado
+Processador de aplicação
+Processador dedicado
+Processador multicore - verificado
+Rede em nuvem
+Registradores
+Semicondutor
+Sistema embarcado
+Sistema de interconexão
+Sistema fortemente embarcado
+Software como um serviço (SaaS)
+Unidade lógica e aritmética (ALU) - verificado
+Unidade de processamento central (CPU) - verificado
+Unidade de controle - verificado
+Unidade de gerenciamento de memória (MMU)
+Unidadde de proteção de memória (MPU)
+Válvulas
