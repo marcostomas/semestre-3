@@ -25,7 +25,7 @@ void loadM(char *imgFileName)
 		/* podem acontecer coisas inesperadas caso falte ou sobre \n no arquivo.
 		 * */
 		fscanf(fp, "%d\n", &(M[i]));
-		printf("conteúdo: %d ", M[i]);
+		printf("conteúdo: %d \n", M[i]);
 		++i;
 	}
 	fclose(fp);
@@ -33,7 +33,7 @@ void loadM(char *imgFileName)
 
 void dumpM()
 {
-	for (int i = 0; i < MEMSIZE; i++)
+	for (int i = 0; i < 15; i++)
 	{
 		printf("(%d,%d)\t", i, M[i]);
 	}
@@ -144,12 +144,13 @@ void executa()
 {
 	puts("Execucao:");
 	int retorno;
-	for (int i = 0; i < MEMSIZE; i++)
+	pc = 1;
+	do
 	{
-		retorno = controle(M[i]);
-		if (retorno == 1)
-			return;
-	}
+		retorno = controle(M[pc]);
+	} while (retorno != 1);
+
+	return;
 }
 
 void main(int argc, char *argv[])
@@ -163,8 +164,26 @@ void main(int argc, char *argv[])
 		 * dos conceitos que quero explorar na disciplina. Por isso, a carga de
 		 * um programa na memória, neste simulador, é algo feito "por fora"
 		 * da simulação.
-		 * */
-		loadM(argv[1]);
+		 */
+		// loadM(argv[1]);
+		M[0] = 5000;
+		M[1] = 1130;
+		M[2] = 1240;
+		M[3] = 3150;
+		M[4] = 4150;
+		M[5] = 1150;
+		M[6] = 5411;
+		M[7] = 1140;
+		M[8] = 2150;
+		M[9] = 1240;
+		M[10] = 5103;
+		M[11] = 4140;
+		M[12] = 7000;
+		M[13] = 0000;
+		for (int i = 14; i < MEMSIZE; i++)
+		{
+			M[i] = 0;
+		}
 		dumpM();
 		executa();
 	}
