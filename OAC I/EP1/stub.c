@@ -25,7 +25,7 @@ void loadM(char *imgFileName)
 		/* podem acontecer coisas inesperadas caso falte ou sobre \n no arquivo.
 		 * */
 		fscanf(fp, "%d\n", &(M[i]));
-		printf("conteudo: %d ", M[i]);
+		printf("conteúdo: %d ", M[i]);
 		++i;
 	}
 	fclose(fp);
@@ -75,16 +75,15 @@ int controle(int codigo)
 	case 3:
 		if (instrucao == 31)
 		{
-			printf("Endereco: %d \n", endereco);
 			printf("Instrucao 31 (LER). Digite um inteiro: ");
-			scanf("%i\n", &M[endereco]);
-			printf("Valor armazenado: %d \n", M[endereco]);
+			scanf("%d", &M[endereco]);
+			printf("\n");
 		}
 		break;
 
 	case 4:
 		if (instrucao == 41)
-			printf("Endereco: %d. Conteudo: %d", endereco, M[endereco]); // imprimir apenas o cont. mudar depois
+			printf("%d\n", M[endereco]);
 		break;
 
 	case 5:
@@ -94,47 +93,46 @@ int controle(int codigo)
 			pc = endereco;
 		else if (instrucao == 52)
 		{
-			if (pc > 0)
+			if (acc > 0)
 				pc = endereco;
 		}
 		else if (instrucao == 53)
 		{
-			if (pc >= 0)
+			if (acc >= 0)
 				pc = endereco;
 		}
 		else if (instrucao == 54)
 		{
-			if (pc < 0)
+			if (acc < 0)
 				pc = endereco;
 		}
 		else if (instrucao == 55)
 		{
-			if (pc <= 0)
+			if (acc <= 0)
 				pc = endereco;
 		}
 		else if (instrucao == 56)
 		{
-			if (pc != 0)
+			if (acc != 0)
 				pc = endereco;
 		}
 		else if (instrucao == 57)
 		{
-			if (pc == 0)
+			if (acc == 0)
 				pc = endereco;
 		}
 		break;
 
 	case 6:
 		if (instrucao == 61)
-			printf("INSTRUCAO 61 PENDENTE DE IMPLEMENTACAO");
+			acc = acc % 10000 * 10;
 		else if (instrucao == 62)
-			printf("INSTRUCAO 62 PENDENTE DE IMPLEMENTACAO");
-
+			acc = acc / 10;
 		break;
 
 	case 7:
 		if (instrucao == 70)
-			return 0;
+			return 1;
 
 	default:
 		break;
@@ -145,20 +143,13 @@ int controle(int codigo)
 void executa()
 {
 	puts("Execucao:");
-
-	for (int i = 0; i < 14; i++)
+	int retorno;
+	for (int i = 0; i < MEMSIZE; i++)
 	{
-		controle(M[i]);
+		retorno = controle(M[i]);
+		if (retorno == 1)
+			return;
 	}
-
-	for (int i = 0; i < 54; i++)
-	{
-		;
-		printf("i: %d. valor: %d", i, M[i]);
-	}
-	/* insira seu programa aqui. */
-	/* caso crie outras funções, crie neste arquivo (e chame-as aqui ou onde
-	 * for conveniente */
 }
 
 void main(int argc, char *argv[])
