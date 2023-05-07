@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-// #define vertex int
+#define verticePos int
 #define vertice char
 
 static int cnt, pre[1000];
@@ -16,6 +16,7 @@ typedef struct node *link;
 struct node
 {
     vertice w;
+    verticePos pos;
     link next;
 };
 
@@ -31,7 +32,7 @@ typedef struct graph *Graph;
 // A função GRAPHinit() constrói um grafo com vértices 0 1 .. V-1 e nenhum arco.
 Graph GRAPHinit(int V)
 {
-    Graph G = malloc(sizeof G);
+    Graph G = malloc(sizeof *G);
     G->V = V;
     G->A = 0;
     G->adj = malloc(V * sizeof(link));
@@ -41,23 +42,24 @@ Graph GRAPHinit(int V)
 }
 
 // A função NEWnode() recebe um vértice w e o endereço next de um nó e devolve o endereço a de um novo nó tal que a->w == w e a->next == next.
-static link NEWnode(vertice w, link next)
+static link NEWnode(vertice w, verticePos pos, link next)
 {
     link a = malloc(sizeof(struct node));
     a->w = w;
+    a->pos = pos;
     a->next = next;
     return a;
 }
 
 // A função GRAPHinsertArc() insere um arco v - w no grafo G.A função supõe que v e w são distintos, positivos e menores que G->V.Se o grafo já tem um arco v - w, a função não faz nada.
-// void GRAPHinsertArc(Graph G, vertice v, vertice w)
-// {
-//     for (link a = G->adj[v]; a != NULL; a = a->next)
-//         if (a->w == w)
-//             return;
-//     G->adj[v] = NEWnode(w, G->adj[v]);
-//     G->A++;
-// }
+void GRAPHinsertArc(Graph G, verticePos v, verticePos w)
+{
+    for (link a = G->adj[v]; a != NULL; a = a->next)
+        if (a->w == w)
+            return;
+    G->adj[v] = NEWnode(w, G->adj[v]);
+    G->A++;
+}
 
 // // Constrói o reverso do grafo G.
 // Graph GRAPHreverse(Graph G)
@@ -152,6 +154,48 @@ static link NEWnode(vertice w, link next)
 //     return k;
 // }
 
+bool createArcs(Graph g, int *LFpositions, int LFposintionsLivre, char *string)
+{
+    char verticesVizinhos[g->V][g->V];
+    int vvColLivre = 0, vvPosLivre = 0;
+
+    // Colocamos cada nó em uma posição da matriz. Cada coluna da matriz representa um nó. Todos as linhas de cada coluna representam os vizinhos. No pior dos casos, isto é, o grafo é denso, então gastamos O(n²).
+    for (int j = 0; j < LFposintionsLivre; j++)
+    {
+        for (int n = LFpositions[j] + 4; n < LFpositions[j + 1]; n++)
+        {
+            if (string[n] != 10 && string[n] != 32 && string[n] != 58 && string[n] != 59)
+            {
+                verticesVizinhos[vvColLivre][vvPosLivre] = string[n];
+                vvPosLivre++;
+                GRAPHinsertArc(g, string[LFpositions[j] + 1], string[n]);
+            }
+        }
+        vvColLivre++;
+        vvPosLivre = 0;
+    }
+
+    return true;
+}
+
+// Encontra todos o (\n) da string passada.
+// int *findLF(char *string)
+// {
+//     // posSelect irá armazenar as posições de cada '\n' da string. Usaremos para um controle mais efetivo do código
+//     int *posSelect = (int *)malloc(sizeof(int));
+//     int livre = 0;
+
+//     // Percorremos toda a string para encontrar as posições do caractere (\n). Gastamos O(n).
+//     for (int i = 0; i < strlen(string); i++)
+//         if (string[i] == 10)
+//         {
+//             posSelect[livre] = i;
+//             livre++;
+//         }
+
+//     return posSelect;
+// }
+
 int main(int argc, char *argv[])
 {
     if (argc > 1)
@@ -174,14 +218,13 @@ int main(int argc, char *argv[])
             return 1;
         }
 
-        char nVerticesC = fgetc(stream);
+        int nVertices = fgetc(stream) - '0'; // Convertendo de Char para int
+
         fread(string, 68 * sizeof(char), 1, stream);
         fclose(stream);
 
-        int nVertices = nVerticesC - '0'; // Convertendo de Char para int
         char tipoAlgoritmoC;
-        int tipoAlgoritmo;
-        int strLen = strlen(string);
+        int tipoAlgoritmo, strLen = strlen(string);
 
         tipoAlgoritmoC = string[strLen - 1];
         tipoAlgoritmo = tipoAlgoritmoC - '0';
@@ -196,44 +239,18 @@ int main(int argc, char *argv[])
             59: (;)
         */
 
-        // posSelect irá armazenar as posições de cada '\n' da string. Usaremos para um controle mais efetivo do código
-        int *posSelect = (int *)malloc(45 * sizeof(int));
+        int *LFpositions = (int *)malloc(sizeof(int));
         int livre = 0;
 
-        vertice nodeName;
-        link createdNode;
-
+        // Percorremos toda a string para encontrar as posições do caractere (\n). Gastamos O(n).
         for (int i = 0; i < strlen(string); i++)
-        {
             if (string[i] == 10)
             {
-                posSelect[livre] = i;
+                LFpositions[livre] = i;
                 livre++;
-
-                nodeName = string[i + 1];
-                createdNode = NEWnode(nodeName, NULL);
-
-                for (int v = 0; v < grafo->V; v++)
-                    if (!grafo->adj[v])
-                    {
-                        grafo->adj[v] = createdNode;
-                        break;
-                    }
             }
-        }
-        char *subString;
 
-        for (int j = 0; j < livre; j++)
-        {
-            for (int n = posSelect[j]; n < posSelect[j + 1]; n++)
-            {
-                string[n + 4]
-                // colocar um arco para cada elemento da lista
-            }
-        }
-
-        for (int i = 0; i < grafo->V; i++)
-            printf("Grafo: %c Próximo: %p\n", grafo->adj[i]->w, grafo->adj[i]->next);
+        bool ret = createArcs(grafo, LFpositions, livre, string);
     }
     return 0;
 }
