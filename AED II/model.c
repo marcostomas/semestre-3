@@ -70,58 +70,75 @@ Graph GRAPHrandER(int V, int A)
     return G;
 }
 
-// int main()
-// {
-//     char *string;
+bool createArcs(Graph g, int *LFpositions, int LFposintionsLivre, char *string)
+{
+    char verticesVizinhos[g->V][g->V];
+    int vvColLivre = 0, vvPosLivre = 0;
 
-//     FILE *entrada = fopen("entrada.txt", "r");
-//     if (!entrada)
-//     {
-//         printf("\nNão encontrei o arquivo!\n");
-//         return 1;
-//     }
+    // Colocamos cada nó em uma posição da matriz. Cada coluna da matriz representa um nó. Todos as linhas de cada coluna representam os vizinhos. No pior dos casos, isto é, o grafo é denso, então gastamos O(n²).
+    for (int j = 0; j < LFposintionsLivre; j++)
+    {
+        for (int n = LFpositions[j] + 4; n < LFpositions[j + 1]; n++)
+        {
+            if (string[n] != 10 && string[n] != 32 && string[n] != 58 && string[n] != 59)
+            {
+                verticesVizinhos[vvColLivre][vvPosLivre] = string[n];
+                vvPosLivre++;
+                GRAPHinsertArc(g, string[LFpositions[j] + 1], string[n]);
+            }
+        }
+        vvColLivre++;
+        vvPosLivre = 0;
+    }
 
-//     int retorno;
-//     while (true)
-//     {
-//         retorno = fscanf(entrada, "%s", string); // Sempre retorna 1. Exceto em EOF, que retorna -1
-//         printf("string: (%s)\n", string);
-//         if (retorno != 1)
-//         {
-//             printf("retorno: (%d)\n", retorno);
-//             break;
-//         }
-//     }
-//     fclose(entrada);
-//     return 0;
-// }
+    return true;
+}
 
 int main()
 {
-    char *string;
+    FILE *stream;
+    char *string = (char *)malloc(70 * sizeof(char));
 
-    string = (char *)malloc(15 * sizeof(char));
+    stream = fopen("entradaModel.txt", "r");
 
-    printf("%s", string);
+    if (!stream)
+    {
+        printf("Arquino não encontrado!\n");
+        return 1;
+    }
 
-    // FILE *entrada = fopen("entrada.txt", "r");
-    // if (!entrada)
-    // {
-    //     printf("Arquino não encontrado!\n");
-    //     return 1;
-    // }
+    int nVertices = fgetc(stream) - '0'; // Convertendo de Char para int
 
-    // char nVerticesC = fgetc(entrada);
-    // int nVertices = nVerticesC - '0'; // Convertendo de Char para int
+    fread(string, 68 * sizeof(char), 1, stream);
+    fclose(stream);
 
-    // fgets(string, 15, entrada);
+    char tipoAlgoritmoC;
+    int tipoAlgoritmo, strLen = strlen(string);
 
-    // for (int i = 0; i < 10; i++)
-    // {
-    //     printf("%c", *string); // Segmentation fault, se imprimir string; caso caractere, tudo ok
-    // }
+    tipoAlgoritmoC = string[strLen - 1];
+    tipoAlgoritmo = tipoAlgoritmoC - '0';
 
-    // fclose(entrada);
+    Graph grafo = GRAPHinit(nVertices);
 
+    /*
+        TABELA DE CONVERSÂO DE CARACTERES
+        10: (\n)
+        32: ( )
+        58: (:)
+        59: (;)
+    */
+
+    int *LFpositions = (int *)malloc(sizeof(int));
+    int livre = 0;
+
+    // Percorremos toda a string para encontrar as posições do caractere (\n). Gastamos O(n).
+    for (int i = 0; i < strlen(string); i++)
+        if (string[i] == 10)
+        {
+            LFpositions[livre] = i;
+            livre++;
+        }
+
+    bool ret = createArcs(grafo, LFpositions, livre, string);
     return 0;
 }
