@@ -1,4 +1,0 @@
-gcc -w:
-gcc -g:
-gcc -c: Compile and assemble, but do not link.
-gcc -D:
