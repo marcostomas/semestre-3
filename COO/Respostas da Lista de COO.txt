@@ -1,0 +1,102 @@
+RESPOSTAS DOS EXERCÍCIOS DA LISTA 1 DE COO
+
+1-A) A possibilidade de criação de pacotes nos ajuda para uma melhor separação e entendimento do software. Por exemplo, podemos separar o nosso EP em um pacote 'Base', que conterá todas as classes base do jogo, como Card, Player etc; e outro pacote 'Lógica', que teria todas as implementações das regras do Onitama
+
+1-B) O mecanismo de tratamento de exceções nos permite que o programa não seja encerrado inesperadamente, causando confusão ao usuário do programa. Além disso, nos permite sinalizar a um possível mantenedor do código que aquele bloco envolvido no try pode nos gerar uma exceção e de o tratamento a ser implementado estará dentro do bloco catch.
+
+1-C) Tipos genéricos nos permitem uma maior generalização do algoritmo, bem como o reuso da lógica para diferentes partes do código
+
+2) Privar os atributos pode nos ajudar a evitar erros e exceções; Ao utilizar getters e setter podemos garantir, pro caso do setter, que o número a ser definido não fuja da regra de negócio do programa.
+
+3) A composição nos permite a ter acesso aos atributos e métodos de uma determinada classe, bem como a herança também, porém a composição nos garante uma maior segurança em relação ao acesso da classe a ser herdada, já que os valores dela não poderiam ser acessados por terceiros que utilizam a classe que herda.
+
+4) Criando uma variável estática através do modificador static pode-se ter uma variável que não precisa ser instanciada e no qual seu valor é mantido até o fim da execução do programa
+
+5)
+
+package projeto;
+import projeto.mat.*;
+import projeto.graficos.*;
+
+public class Ex5 {
+	public static void main(String [] args){
+		
+		Triangulo triangulo = new Triangulo();
+		Retangulo retangulo = new Retangulo();
+		Circulo circulo = new Circulo();
+		
+		Poligono poligono = new Poligono();
+		Reta reta = new Reta();
+	}
+}
+
+O código acima não compila porque falta o uso completo do caminho para o tipo Circulo. A ambiguidade das classes Circulo gera um erro do compilador. A solução final ficaria:
+
+package projeto;
+import projeto.mat.*;
+import projeto.graficos.*;
+
+public class Ex5 {
+	public static void main(String [] args){
+		
+		projeto.mat.Triangulo triangulo = new projeto.mat.Triangulo();
+		projeto.mat.Retangulo retangulo = new projeto.mat.Retangulo();
+		projeto.mat.Circulo circulo = new projeto.mat.Circulo();
+		
+		projeto.graficos.Poligono poligono = new projeto.graficos.Poligono();
+		projeto.graficos.Reta reta = new projeto.graficos.Reta();
+	}
+}
+
+6) Eu poderia utilizar o nome inteiro do caminho a cada declaração de um tipo, importar uma classe específica ou o diretório inteiro de um pacote, exemplos:
+	- projeto.mat.Circulo circulo = new projeto.mat.Circulo();
+	- import.mat.*;
+	- import.mat.Triangulo;
+	- import.graficos.Poligono
+	
+7)		Para "20 16":
+			Ex8: inicio.
+			Entre com dois numeros: 20 16
+			Resultado = 5
+			Finally.
+			Ex8: fim.
+			
+  		Para "8 8":
+  			Ex8: inicio.
+			Entre com dois numeros: 8 8
+			Divisao por zero!
+			Finally.
+			Ex8: fim.
+			
+  		Para "23 9.5":
+  			Ex8: inicio.
+			Entre com dois numeros: 23 9.5
+			Finally.
+			Exception in thread "main" java.util.InputMismatchException
+        		at java.base/java.util.Scanner.throwFor(Scanner.java:947)
+        		at java.base/java.util.Scanner.next(Scanner.java:1602)
+        		at java.base/java.util.Scanner.nextInt(Scanner.java:2267)
+        		at java.base/java.util.Scanner.nextInt(Scanner.java:2221)
+        		at Ex7.metodo(Ex7.java:48)
+        		at Ex7.main(Ex7.java:62)
+        		
+  		Para "10 20":
+	  		Ex8: inicio.
+			Entre com dois numeros: 10 20
+			Finally.
+			Ex8: fim.
+			
+8) O bloco finally executa sempre, independentemente de ocorrer, ou não, uma exceção; podemos ver o bloco finally para uma lógica que não exija repetição e que o programador sabe que não há risco da VM lançar uma exceção
+
+9) throw dispara uma exceção explicitamente. throws, por outro lado, serve para declarar quais exceções podem ser lançadas quando o método está sendo executado
+
+10) A classe, em sua declaração, deve herdar, via a palavra-chave 'extends', de alguma classe que implementa de 'Exception' ou da própria classe 'Exception'.
+
+11) Exceções verificadas tem de ser obrigatoriamente tratadas, seja com um bloco try...catch ou com throws na assinatura do método. Ou seja, exceções verificadas são exceções que não demandam a parada abrupta do programa, diferentemente de exceções não verificadas, que demandam a parada abrupta do programa, como RuntimeException ou classes derivadas de Error, e não devem ser obrigatoriamente tratadas, mas podem.
+
+12-A) Uma Exceção do tipo 'Exception' é uma exceção muita ampla, visto que várias classes derivam de 'Exception'. Isto é, talvez não ficasse tão claro e evidente para o usuário do erro que ele cometeu. O ideal seria lançar uma exceção mais específica para deixar claro o problema.
+
+12-B) Pode ser interessante se dermos uma funcionalidade bem específica e nomearmos essa classe de modo a facilitar o entendimento do nosso usuário. Isso resolveria os problemas da letra A.
+
+12-C) Poderia ser útil caso nosso programa lançasse uma RuntimeException, porém, RuntimeException é um tipo de exceção não verificada, ou seja, não demanda tratamento. Mas acredito que o tipo RuntimeException não seja adequado para a maioria dos programas a serem desenvolvidos.
+
