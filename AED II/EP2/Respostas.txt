@@ -1,0 +1,4 @@
+RESPOSTAS DO EP2 PARTE 1
+
+1) Qual a diferença entre pos de bTreeNode e nextPos de tree?
+	pos de bTreeNode representa a posição de um nó na sequência do nó pai. nextPos de tree 
