@@ -60,6 +60,20 @@ public class Card {
      * @return Vetor de cartas com todas as cartas do jogo
      */
     public static Card[] createCards() {
-        return null;
+        Color[] colors = Color.values();
+    	Position[] positions = {new Position(1, 0), new Position(0, 1), new position(-1, 0), new Position (0, -1)};
+    	String[] names = {"TIGER", "DRAGON", "FROG", "RABBIT", "CRAB", "ELEPHANT", "GOOSE", "ROOSTER"};
+    	
+    	Card[] cards = new Card[5];
+    	
+    	for(int i = 0; i < 5; i++){
+    		int indiceCorAleatoria = (int) (Math.random() * colors.lenght);
+    		Color corAleatoria = colors[indiceCorAleatoria];
+    		
+    		Card card = new Card(names[i], corAleatoria, positions);
+    		cards[i] = card;
+    	}
+    	
+        return cards;
     }
 }

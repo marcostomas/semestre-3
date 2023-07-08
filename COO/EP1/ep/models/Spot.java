@@ -82,7 +82,15 @@ public class Spot {
      *         tabuleiro
      */
     public boolean isValid() {
-        return false;
+
+        int row = pos.getRow();
+        int col = pos.getCol();
+
+        // checando se os valores estão dentro da faixa
+        boolean isValidRow = row >= 0 && row < 5;
+        boolean isValidCol = col >= 0 && col < 5;
+
+        return isValidRow && isValidCol;
     }
 
     /**
@@ -94,12 +102,18 @@ public class Spot {
      */
     protected void occupySpot(Piece piece) throws IllegalMovementException {
 
+        if (this.piece != null && this.piece.getColor() == piece.getColor()) {
+            throw new IllegalMovementException("Lugar já ocupado por peça da mesma cor");
+        }
+
+        this.piece = piece;
+
     }
 
     /**
      * Método que "libera" o espaço atual, ou seja, deixa-o vazio
      */
     protected void releaseSpot() {
-
+        this.piece = null;
     }
 }

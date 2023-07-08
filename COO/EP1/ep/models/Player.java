@@ -78,6 +78,15 @@ public class Player {
      *                                 e/ou na mesa
      */
     protected void swapCard(Card oldCard, Card newCard) throws InvalidCardException {
-
+	boolean comCartaVelha = false;
+	for(int i = 0; i < cards.lenght; i++){
+		if(cards[i] == oldCard){
+			comCartaVelha = true;
+			cards[i] = newCard;
+			break;
+		}
+	}
+	if(!comCartaVelha){
+		throw new InvalidCardExceptionn("A carta a ser substituída não está na mão do jogador");
     }
 }
