@@ -1,54 +1,87 @@
-import java.io.IOException;
+import java.io.*;
+
+import algoritmos.*;
+import criterios.*;
+import filtros.*;
+import interfaces.*;
+import ordenacao.*;
+import models.ProdutoCompleto;
 
 public class Main {
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws FileNotFoundException, IOException {
 
         if (args.length < 4) {
 
             System.out.println("Uso:");
             System.out.println("\tjava " + Main.class.getName()
-                    + " <algoritmo> <critério de ordenação> <critério de filtragem> <parâmetro de filtragem> <opções de formatação>");
+                    + " <caminho do arquivo> <algoritmo> <criterio de ordenação> <criterio de filtragem> <parametro de filtragem>");
             System.out.println("Onde:");
+            System.out.println("\tcaminho para o arquivo: o caminho completo do arquivo-fonte no seu sistema");
             System.out.println("\talgoritmo: 'quick' ou 'insertion'");
-            System.out.println("\tcriterio de ordenação: 'preco_c' ou 'descricao_c' ou 'estoque_c'");
-            System.out.println("\tcriterio de filtragem: 'todos' ou 'estoque_menor_igual' ou 'categoria_igual'");
-            System.out.println("\tparâmetro de filtragem: argumentos adicionais necessários para a filtragem");
-            System.out.println("\topções de formatação: 'negrito' e/ou 'italico'");
+            System.out.println(
+                    "\tcriterio de ordenação: 'preco_c' ou 'descricao_c' ou 'estoque_c' ou'preco_d' ou 'descricao_d' ou 'estoque_d'");
+            System.out.println(
+                    "\tcriterio de filtragem: 'todos' ou 'estoque_menor_igual' ou 'categoria_igual' ou 'entre' ou 'substring'");
+            System.out.println(
+                    "\tparametro de filtragem: argumentos adicionais necessários para a filtragem. Para intervalo, usar a notação '10-15'");
+
             System.out.println();
             System.exit(1);
         }
 
-        String opcao_algoritmo = args[0];
-        String opcao_criterio_ord = args[1];
-        String opcao_criterio_filtro = args[2];
-        String opcao_parametro_filtro = args[3];
+        CarregaProdutos cProdutos = new CarregaProdutos(args[0]);
+        ProdutoCompleto produtos = cProdutos.carregarProdutos();
+        GeradorDeRelatorios gdr = new GeradorDeRelatorios();
 
-        String[] opcoes_formatacao = new String[2];
-        opcoes_formatacao[0] = args.length > 4 ? args[4] : null;
-        opcoes_formatacao[1] = args.length > 5 ? args[5] : null;
-        int formato = GeradorDeRelatorios.FORMATO_PADRAO;
+        IAlgoritmo algoritmo;
+        IOrdenacao ordem;
+        ICriterio criterio;
+        IFiltragem filtro;
 
-        for (int i = 0; i < opcoes_formatacao.length; i++) {
-
-            String op = opcoes_formatacao[i];
-            formato |= (op != null
-                    ? op.equals("negrito") ? GeradorDeRelatorios.FORMATO_NEGRITO
-                            : (op.equals("italico") ? GeradorDeRelatorios.FORMATO_ITALICO : 0)
-                    : 0);
+        if (args[2].contains("preco")) {
+            criterio = new Preco();
+        } else if (args[2].contains("estoque")) {
+            criterio = new QuantidadeEstoque();
+        } else {
+            criterio = new Descricao();
         }
 
-        GeradorDeRelatorios gdr = new GeradorDeRelatorios(GeradorDeRelatorios.carregaProdutos(),
-                opcao_algoritmo,
-                opcao_criterio_ord,
-                opcao_criterio_filtro,
-                opcao_parametro_filtro,
-                formato);
-
-        try {
-            gdr.geraRelatorio("saida.html");
-        } catch (IOException e) {
-
-            e.printStackTrace();
+        if (args[2].contains("_c")) {
+            ordem = new Crescente(criterio);
+        } else {
+            ordem = new Decrescente(criterio);
         }
+
+        if (args[3].contains("categoria_igual")) {
+            filtro = new CategoriaIgual(args[4]);
+
+        } else if (args[3].contains("estoque_menor_igual")) {
+            filtro = new EstoqueMenorIgual(Integer.parseInt(args[4]));
+
+        } else if (args[3].contains("entre")) {
+            String[] valores = args[4].split("-");
+
+            double valor1 = Double.parseDouble(valores[0]);
+            double valor2 = Double.parseDouble(valores[1]);
+
+            filtro = new Intervalo(valor1, valor2);
+        } else if (args[3].contains("substring")) {
+            filtro = new Substring(args[4]);
+        } else {
+            filtro = new Todos();
+        }
+
+        if (args[1] == "quick") {
+            algoritmo = new QuickSort(ordem);
+        } else {
+            algoritmo = new InsertionSort(ordem);
+        }
+
+        algoritmo.ordena(0, produtos.produtos.size() - 1, produtos);
+
+        ProdutoCompleto pCompletoFiltrado = filtro.filtra(produtos);
+
+        gdr.gerarRelatorioOrdenado(pCompletoFiltrado, "saida.html", args[3]);
     }
 }
