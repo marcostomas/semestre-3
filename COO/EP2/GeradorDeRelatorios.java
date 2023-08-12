@@ -1,4 +1,5 @@
 import java.io.PrintWriter;
+import java.io.File;
 import java.io.IOException;
 
 import java.util.*;
@@ -29,7 +30,10 @@ public class GeradorDeRelatorios {
 	private String argFiltro;
 	private int format_flags;
 
-	public GeradorDeRelatorios(Produto[] produtos, String algoritmo, String criterio, String filtro, String argFiltro,
+	public GeradorDeRelatorios(
+			Produto[] produtos, String algoritmo,
+			String criterio, String filtro,
+			String argFiltro,
 			int format_flags) {
 
 		this.produtos = new Produto[produtos.length];
@@ -55,8 +59,9 @@ public class GeradorDeRelatorios {
 	public void geraRelatorio(String arquivoSaida) throws IOException {
 
 		debug();
+		Ordenacao ord = new Ordenacao();
 
-		Ordenacao.ordena(0, produtos.length - 1, this.algoritmo, this.produtos, this.criterio);
+		ord.ordenaQuick(0, produtos.length - 1, this.produtos, this.criterio);
 
 		PrintWriter out = new PrintWriter(arquivoSaida);
 
@@ -129,8 +134,20 @@ public class GeradorDeRelatorios {
 
 	public static Produto[] carregaProdutos() {
 
-		return new Produto[] {
+		File file = new File("/home/marcos/Desktop/3\u00BA Semestre/semestre-3/COO/EP2/produtos.csv");
+		Scanner sc = new Scanner(file);
 
+		try {
+			while (sc.hasNextLine()) {
+				System.out.println(sc.nextLine());
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			sc.close();
+		}
+
+		return new Produto[] {
 				new ProdutoPadrao(1, "O Hobbit", "Livros", 2, 34.90),
 				new ProdutoPadrao(2, "Notebook Core i7", "Informatica", 5, 1999.90),
 				new ProdutoPadrao(3, "Resident Evil 4", "Games", 7, 79.90),

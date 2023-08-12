@@ -6,7 +6,7 @@ public class Main {
         if (args.length < 4) {
 
             System.out.println("Uso:");
-            System.out.println("\tjava " + GeradorDeRelatorios.class.getName()
+            System.out.println("\tjava " + Main.class.getName()
                     + " <algoritmo> <critério de ordenação> <critério de filtragem> <parâmetro de filtragem> <opções de formatação>");
             System.out.println("Onde:");
             System.out.println("\talgoritmo: 'quick' ou 'insertion'");
